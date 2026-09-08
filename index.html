@@ -5,14 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Comic Hotspot Builder</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Area-only mode: media is clipped to the exact rectangle the user drags. */
-    .inline-overlay {
-      object-fit: cover !important;
-      object-position: center !important;
-      filter: none !important;
-    }
-  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -56,7 +48,7 @@
         <div class="inspector-section">
           <p class="eyebrow">AREA TERPILIH</p>
           <h2 id="selectionTitle">Belum ada</h2>
-          <p class="hint">Drag cuma bagian gambar yang mau berubah. Saat diklik, PNG/GIF hanya menggantikan isi kotak itu, bukan seluruh komik.</p>
+          <p class="hint">Drag bagian komik yang mau interaktif. Area itu bisa diganti GIF/PNG, membuka popup, atau meminta password dulu.</p>
         </div>
 
         <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
@@ -69,25 +61,32 @@
             Aksi saat diklik
             <select id="actionSelect" disabled>
               <option value="overlay">Ganti hanya area yang di-drag</option>
-              <option value="popup">Popup seluruh layar (opsional)</option>
+              <option value="popup">Popup gambar / GIF</option>
+              <option value="password">Minta password → lalu popup</option>
             </select>
           </label>
 
+          <div id="passwordSettings" class="password-settings" hidden>
+            <label>
+              Pertanyaan / petunjuk
+              <input id="promptInput" type="text" placeholder="Apa kata yang kamu temukan?" disabled />
+            </label>
+            <label>
+              Password / jawaban benar
+              <input id="passwordInput" type="text" placeholder="Contoh: MERDEKA" disabled />
+            </label>
+            <p class="tiny-note">Ini puzzle lokal, bukan sistem keamanan. Password tetap tersimpan di HTML final.</p>
+          </div>
+
           <label class="file-button compact">
-            Pilih PNG / GIF / WebP pengganti
+            Pilih PNG / GIF / WebP
             <input id="mediaInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled />
           </label>
           <div id="mediaName" class="media-name">Belum ada media.</div>
 
-          <label id="overlayScaleRow">
-            Ukuran overlay
-            <input id="overlayScale" type="range" min="100" max="100" value="100" disabled />
-            <output id="overlayScaleValue">100%</output>
-          </label>
-
           <label class="check-row">
             <input id="toggleCloseInput" type="checkbox" checked disabled />
-            Klik area lagi untuk mengembalikan gambar asli
+            Klik area lagi untuk menutup / mengembalikan
           </label>
         </div>
 
@@ -96,11 +95,11 @@
           <div><kbd>E</kbd><span>Edit / Demo</span></div>
           <div><kbd>D</kbd><span>Tampilkan area klik</span></div>
           <div><kbd>F</kbd><span>Fullscreen</span></div>
-          <div><kbd>Esc</kbd><span>Tutup popup</span></div>
+          <div><kbd>Esc</kbd><span>Tutup popup / password</span></div>
         </div>
 
         <div class="inspector-section note">
-          <p><strong>Contoh:</strong> drag cuma layar monitor → pilih GIF → Mode Demo → klik monitor → cuma layar monitor yang berubah. Bagian komik lain tetap gambar asli.</p>
+          <p><strong>Contoh password:</strong> drag simbol/kotak → pilih “Minta password” → isi petunjuk + jawaban “MERDEKA” → pilih PNG/GIF hadiah → saat demo, klik area → input jawaban → benar → media muncul.</p>
         </div>
       </aside>
     </main>
@@ -111,7 +110,17 @@
     <img id="popupImage" alt="Konten popup" />
   </div>
 
+  <div id="passwordModal" class="password-modal" aria-hidden="true">
+    <form id="passwordForm" class="password-card">
+      <button id="passwordClose" class="popup-close" type="button" aria-label="Tutup password">×</button>
+      <p class="eyebrow">UNLOCK</p>
+      <h2 id="passwordPrompt">Masukkan password</h2>
+      <input id="passwordAnswer" type="text" autocomplete="off" placeholder="Ketik jawaban di sini" />
+      <button class="btn btn-primary" type="submit">Jawab</button>
+      <p id="passwordMessage" class="password-message" aria-live="polite"></p>
+    </form>
+  </div>
+
   <script src="script.js"></script>
-  <script src="area-only-patch.js"></script>
 </body>
 </html>
