@@ -14,8 +14,8 @@
         <h1>Panel Sequence Builder</h1>
       </div>
       <div class="top-actions">
-        <button id="modeBtn" class="btn btn-secondary" type="button">Mode: Edit</button>
-        <button id="fullscreenBtn" class="btn btn-secondary" type="button">Fullscreen</button>
+        <button id="modeBtn" class="btn" type="button">Mode: Edit</button>
+        <button id="fullscreenBtn" class="btn" type="button">Fullscreen</button>
         <button id="exportBtn" class="btn btn-primary" type="button">Export HTML Final</button>
       </div>
     </header>
@@ -27,16 +27,16 @@
             Tambah Panel
             <input id="panelInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden />
           </label>
-          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Area Interaktif</button>
+          <button id="addHotspotBtn" class="btn" type="button" disabled>Tambah Area Popup</button>
           <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Area</button>
           <span id="statusText" class="status">Masukkan Fig 1, Fig 2, dst.</span>
         </div>
 
-        <div id="stageViewport" class="stage-viewport">
-          <div id="comicStage" class="comic-stage is-empty" aria-label="Panel komik">
-            <div id="emptyState" class="empty-state">
+        <div class="stage-viewport">
+          <div id="comicStage" class="comic-stage is-empty">
+            <div class="empty-state" id="emptyState">
               <strong>Belum ada panel.</strong>
-              <span>Pilih beberapa gambar sekaligus. Urutannya menjadi Fig 1 → Fig 2 → ...</span>
+              <span>Pilih beberapa gambar. Nama seperti fig-1, fig-2, fig-3 akan diurutkan otomatis.</span>
             </div>
             <img id="comicImage" class="comic-image" alt="Panel komik" draggable="false" />
             <div id="hotspotLayer" class="hotspot-layer"></div>
@@ -50,29 +50,33 @@
 
       <aside class="inspector">
         <section class="inspector-section">
-          <p class="eyebrow">PANEL SAAT INI</p>
+          <p class="eyebrow">PANEL</p>
           <h2 id="panelTitle">Belum ada</h2>
-          <p class="hint">Panel berpindah dengan tombol Next/Back saat Mode Demo. Panel terakhir bisa diberi area popup seperti yang kita bikin tadi.</p>
+          <p id="panelHint" class="hint">Panel terakhir akan menjadi panel interaktif.</p>
+          <div class="panel-actions">
+            <button id="movePanelLeftBtn" class="btn compact-btn" type="button" disabled>← Geser</button>
+            <button id="movePanelRightBtn" class="btn compact-btn" type="button" disabled>Geser →</button>
+          </div>
           <button id="deletePanelBtn" class="btn btn-danger wide" type="button" disabled>Hapus Panel Ini</button>
         </section>
 
         <section class="inspector-section">
           <p class="eyebrow">AREA INTERAKTIF</p>
           <h2 id="selectionTitle">Belum ada</h2>
-          <p class="hint">Drag bagian kecil pada panel, lalu tentukan apa yang terjadi saat area itu diklik.</p>
+          <p class="hint">Area popup hanya dibuat di panel terakhir. Drag tepat di objek yang mau bisa diklik.</p>
         </section>
 
         <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
           <label>
             Nama area
-            <input id="labelInput" type="text" placeholder="Contoh: layar monitor" disabled />
+            <input id="labelInput" type="text" placeholder="Contoh: monitor / simbol" disabled />
           </label>
 
           <label>
             Aksi saat diklik
             <select id="actionSelect" disabled>
+              <option value="popup">Popup PNG / GIF</option>
               <option value="overlay">Ganti hanya area yang di-drag</option>
-              <option value="popup">Popup gambar / GIF</option>
               <option value="password">Password → lalu popup</option>
             </select>
           </label>
@@ -83,9 +87,10 @@
               <input id="promptInput" type="text" placeholder="Apa kata yang kamu temukan?" disabled />
             </label>
             <label>
-              Password / jawaban benar
+              Password / jawaban
               <input id="passwordInput" type="text" placeholder="Contoh: MERDEKA" disabled />
             </label>
+            <p class="tiny-note">Ini puzzle lokal, bukan keamanan. Jawaban tersimpan di HTML final.</p>
           </div>
 
           <label class="file-button compact">
@@ -103,21 +108,21 @@
         <section class="inspector-section shortcuts">
           <p class="eyebrow">SHORTCUT</p>
           <div><kbd>E</kbd><span>Edit / Demo</span></div>
-          <div><kbd>D</kbd><span>Tampilkan hotspot</span></div>
+          <div><kbd>D</kbd><span>Tampilkan area klik</span></div>
           <div><kbd>F</kbd><span>Fullscreen</span></div>
-          <div><kbd>←</kbd><span>Panel sebelumnya saat demo</span></div>
-          <div><kbd>→</kbd><span>Panel berikutnya saat demo</span></div>
+          <div><kbd>←</kbd><span>Panel sebelumnya</span></div>
+          <div><kbd>→</kbd><span>Panel berikutnya</span></div>
           <div><kbd>Esc</kbd><span>Tutup popup</span></div>
         </section>
       </aside>
     </main>
   </div>
 
-  <div id="demoNav" class="demo-nav" aria-hidden="true">
+  <nav id="demoNav" class="demo-nav" aria-hidden="true">
     <button id="prevPanelBtn" class="demo-nav-btn" type="button">← Kembali</button>
     <span id="demoCounter" class="demo-counter">1 / 1</span>
     <button id="nextPanelBtn" class="demo-nav-btn primary" type="button">Lanjut →</button>
-  </div>
+  </nav>
 
   <div id="popup" class="popup" aria-hidden="true">
     <button id="popupClose" class="popup-close" type="button" aria-label="Tutup popup">×</button>
