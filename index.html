@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Comic Hotspot Builder</title>
+  <title>Interactive Comic Sequence Builder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="edit-mode">
   <div class="app-shell">
     <header class="topbar">
       <div>
         <p class="eyebrow">OFFLINE INTERACTIVE COMIC</p>
-        <h1>Hotspot Builder</h1>
+        <h1>Panel Sequence Builder</h1>
       </div>
       <div class="top-actions">
         <button id="modeBtn" class="btn btn-secondary" type="button">Mode: Edit</button>
@@ -24,32 +24,43 @@
       <section class="stage-panel">
         <div class="stage-toolbar">
           <label class="file-button btn btn-primary">
-            Pilih Gambar Komik
-            <input id="comicInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+            Tambah Panel
+            <input id="panelInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden />
           </label>
-          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Area Klik</button>
+          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Area Interaktif</button>
           <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Area</button>
-          <span id="statusText" class="status">Pilih gambar komik untuk mulai.</span>
+          <span id="statusText" class="status">Masukkan Fig 1, Fig 2, dst.</span>
         </div>
 
         <div id="stageViewport" class="stage-viewport">
-          <div id="comicStage" class="comic-stage is-empty" aria-label="Area komik interaktif">
+          <div id="comicStage" class="comic-stage is-empty" aria-label="Panel komik">
             <div id="emptyState" class="empty-state">
-              <strong>Belum ada artwork.</strong>
-              <span>Masukkan PNG/JPG/WebP/GIF. Semua berjalan lokal, tanpa internet.</span>
+              <strong>Belum ada panel.</strong>
+              <span>Pilih beberapa gambar sekaligus. Urutannya menjadi Fig 1 → Fig 2 → ...</span>
             </div>
-            <img id="comicImage" class="comic-image" alt="Artwork komik" draggable="false" />
+            <img id="comicImage" class="comic-image" alt="Panel komik" draggable="false" />
             <div id="hotspotLayer" class="hotspot-layer"></div>
           </div>
+        </div>
+
+        <div class="panel-strip-wrap">
+          <div id="panelStrip" class="panel-strip"></div>
         </div>
       </section>
 
       <aside class="inspector">
-        <div class="inspector-section">
-          <p class="eyebrow">AREA TERPILIH</p>
+        <section class="inspector-section">
+          <p class="eyebrow">PANEL SAAT INI</p>
+          <h2 id="panelTitle">Belum ada</h2>
+          <p class="hint">Panel berpindah dengan tombol Next/Back saat Mode Demo. Panel terakhir bisa diberi area popup seperti yang kita bikin tadi.</p>
+          <button id="deletePanelBtn" class="btn btn-danger wide" type="button" disabled>Hapus Panel Ini</button>
+        </section>
+
+        <section class="inspector-section">
+          <p class="eyebrow">AREA INTERAKTIF</p>
           <h2 id="selectionTitle">Belum ada</h2>
-          <p class="hint">Drag bagian komik yang mau interaktif. Area itu bisa diganti GIF/PNG, membuka popup, atau meminta password dulu.</p>
-        </div>
+          <p class="hint">Drag bagian kecil pada panel, lalu tentukan apa yang terjadi saat area itu diklik.</p>
+        </section>
 
         <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
           <label>
@@ -62,7 +73,7 @@
             <select id="actionSelect" disabled>
               <option value="overlay">Ganti hanya area yang di-drag</option>
               <option value="popup">Popup gambar / GIF</option>
-              <option value="password">Minta password → lalu popup</option>
+              <option value="password">Password → lalu popup</option>
             </select>
           </label>
 
@@ -75,7 +86,6 @@
               Password / jawaban benar
               <input id="passwordInput" type="text" placeholder="Contoh: MERDEKA" disabled />
             </label>
-            <p class="tiny-note">Ini puzzle lokal, bukan sistem keamanan. Password tetap tersimpan di HTML final.</p>
           </div>
 
           <label class="file-button compact">
@@ -86,23 +96,27 @@
 
           <label class="check-row">
             <input id="toggleCloseInput" type="checkbox" checked disabled />
-            Klik area lagi untuk menutup / mengembalikan
+            Klik lagi untuk menutup / mengembalikan
           </label>
         </div>
 
-        <div class="inspector-section shortcuts">
+        <section class="inspector-section shortcuts">
           <p class="eyebrow">SHORTCUT</p>
           <div><kbd>E</kbd><span>Edit / Demo</span></div>
-          <div><kbd>D</kbd><span>Tampilkan area klik</span></div>
+          <div><kbd>D</kbd><span>Tampilkan hotspot</span></div>
           <div><kbd>F</kbd><span>Fullscreen</span></div>
-          <div><kbd>Esc</kbd><span>Tutup popup / password</span></div>
-        </div>
-
-        <div class="inspector-section note">
-          <p><strong>Contoh password:</strong> drag simbol/kotak → pilih “Minta password” → isi petunjuk + jawaban “MERDEKA” → pilih PNG/GIF hadiah → saat demo, klik area → input jawaban → benar → media muncul.</p>
-        </div>
+          <div><kbd>←</kbd><span>Panel sebelumnya saat demo</span></div>
+          <div><kbd>→</kbd><span>Panel berikutnya saat demo</span></div>
+          <div><kbd>Esc</kbd><span>Tutup popup</span></div>
+        </section>
       </aside>
     </main>
+  </div>
+
+  <div id="demoNav" class="demo-nav" aria-hidden="true">
+    <button id="prevPanelBtn" class="demo-nav-btn" type="button">← Kembali</button>
+    <span id="demoCounter" class="demo-counter">1 / 1</span>
+    <button id="nextPanelBtn" class="demo-nav-btn primary" type="button">Lanjut →</button>
   </div>
 
   <div id="popup" class="popup" aria-hidden="true">
@@ -112,10 +126,10 @@
 
   <div id="passwordModal" class="password-modal" aria-hidden="true">
     <form id="passwordForm" class="password-card">
-      <button id="passwordClose" class="popup-close" type="button" aria-label="Tutup password">×</button>
+      <button id="passwordClose" class="popup-close inside" type="button" aria-label="Tutup password">×</button>
       <p class="eyebrow">UNLOCK</p>
       <h2 id="passwordPrompt">Masukkan password</h2>
-      <input id="passwordAnswer" type="text" autocomplete="off" placeholder="Ketik jawaban di sini" />
+      <input id="passwordAnswer" type="text" autocomplete="off" placeholder="Ketik jawaban" />
       <button class="btn btn-primary" type="submit">Jawab</button>
       <p id="passwordMessage" class="password-message" aria-live="polite"></p>
     </form>
