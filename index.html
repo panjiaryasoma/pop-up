@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Comic Hotspot Builder</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Area-only mode: media is clipped to the exact rectangle the user drags. */
+    .inline-overlay {
+      object-fit: cover !important;
+      object-position: center !important;
+      filter: none !important;
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -27,8 +35,8 @@
             Pilih Gambar Komik
             <input id="comicInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
           </label>
-          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Hotspot</button>
-          <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Hotspot</button>
+          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Area Klik</button>
+          <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Area</button>
           <span id="statusText" class="status">Pilih gambar komik untuk mulai.</span>
         </div>
 
@@ -46,53 +54,53 @@
 
       <aside class="inspector">
         <div class="inspector-section">
-          <p class="eyebrow">HOTSPOT TERPILIH</p>
+          <p class="eyebrow">AREA TERPILIH</p>
           <h2 id="selectionTitle">Belum ada</h2>
-          <p class="hint">Buat hotspot lalu pilih area merahnya untuk mengatur aksi.</p>
+          <p class="hint">Drag cuma bagian gambar yang mau berubah. Saat diklik, PNG/GIF hanya menggantikan isi kotak itu, bukan seluruh komik.</p>
         </div>
 
         <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
           <label>
-            Nama hotspot
-            <input id="labelInput" type="text" placeholder="Contoh: monitor" disabled />
+            Nama area
+            <input id="labelInput" type="text" placeholder="Contoh: layar monitor" disabled />
           </label>
 
           <label>
             Aksi saat diklik
             <select id="actionSelect" disabled>
-              <option value="popup">Popup layar</option>
-              <option value="overlay">Overlay di area hotspot</option>
+              <option value="overlay">Ganti hanya area yang di-drag</option>
+              <option value="popup">Popup seluruh layar (opsional)</option>
             </select>
           </label>
 
           <label class="file-button compact">
-            Pilih PNG / GIF / WebP
+            Pilih PNG / GIF / WebP pengganti
             <input id="mediaInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled />
           </label>
           <div id="mediaName" class="media-name">Belum ada media.</div>
 
-          <label>
+          <label id="overlayScaleRow">
             Ukuran overlay
-            <input id="overlayScale" type="range" min="50" max="180" value="100" disabled />
+            <input id="overlayScale" type="range" min="100" max="100" value="100" disabled />
             <output id="overlayScaleValue">100%</output>
           </label>
 
           <label class="check-row">
             <input id="toggleCloseInput" type="checkbox" checked disabled />
-            Klik hotspot lagi untuk menutup
+            Klik area lagi untuk mengembalikan gambar asli
           </label>
         </div>
 
         <div class="inspector-section shortcuts">
           <p class="eyebrow">SHORTCUT</p>
           <div><kbd>E</kbd><span>Edit / Demo</span></div>
-          <div><kbd>D</kbd><span>Tampilkan hotspot debug</span></div>
+          <div><kbd>D</kbd><span>Tampilkan area klik</span></div>
           <div><kbd>F</kbd><span>Fullscreen</span></div>
           <div><kbd>Esc</kbd><span>Tutup popup</span></div>
         </div>
 
         <div class="inspector-section note">
-          <p><strong>Workflow Hari H:</strong> pilih gambar → tambah hotspot → pilih GIF/PNG → ubah ke Demo → test → Export HTML Final.</p>
+          <p><strong>Contoh:</strong> drag cuma layar monitor → pilih GIF → Mode Demo → klik monitor → cuma layar monitor yang berubah. Bagian komik lain tetap gambar asli.</p>
         </div>
       </aside>
     </main>
@@ -104,5 +112,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="area-only-patch.js"></script>
 </body>
 </html>
