@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Comic Hotspot Builder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">OFFLINE INTERACTIVE COMIC</p>
+        <h1>Hotspot Builder</h1>
+      </div>
+      <div class="top-actions">
+        <button id="modeBtn" class="btn btn-secondary" type="button">Mode: Edit</button>
+        <button id="fullscreenBtn" class="btn btn-secondary" type="button">Fullscreen</button>
+        <button id="exportBtn" class="btn btn-primary" type="button">Export HTML Final</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="stage-panel">
+        <div class="stage-toolbar">
+          <label class="file-button btn btn-primary">
+            Pilih Gambar Komik
+            <input id="comicInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+          </label>
+          <button id="addHotspotBtn" class="btn btn-secondary" type="button" disabled>Tambah Hotspot</button>
+          <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Hotspot</button>
+          <span id="statusText" class="status">Pilih gambar komik untuk mulai.</span>
+        </div>
+
+        <div id="stageViewport" class="stage-viewport">
+          <div id="comicStage" class="comic-stage is-empty" aria-label="Area komik interaktif">
+            <div id="emptyState" class="empty-state">
+              <strong>Belum ada artwork.</strong>
+              <span>Masukkan PNG/JPG/WebP/GIF. Semua berjalan lokal, tanpa internet.</span>
+            </div>
+            <img id="comicImage" class="comic-image" alt="Artwork komik" draggable="false" />
+            <div id="hotspotLayer" class="hotspot-layer"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="inspector">
+        <div class="inspector-section">
+          <p class="eyebrow">HOTSPOT TERPILIH</p>
+          <h2 id="selectionTitle">Belum ada</h2>
+          <p class="hint">Buat hotspot lalu pilih area merahnya untuk mengatur aksi.</p>
+        </div>
+
+        <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
+          <label>
+            Nama hotspot
+            <input id="labelInput" type="text" placeholder="Contoh: monitor" disabled />
+          </label>
+
+          <label>
+            Aksi saat diklik
+            <select id="actionSelect" disabled>
+              <option value="popup">Popup layar</option>
+              <option value="overlay">Overlay di area hotspot</option>
+            </select>
+          </label>
+
+          <label class="file-button compact">
+            Pilih PNG / GIF / WebP
+            <input id="mediaInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled />
+          </label>
+          <div id="mediaName" class="media-name">Belum ada media.</div>
+
+          <label>
+            Ukuran overlay
+            <input id="overlayScale" type="range" min="50" max="180" value="100" disabled />
+            <output id="overlayScaleValue">100%</output>
+          </label>
+
+          <label class="check-row">
+            <input id="toggleCloseInput" type="checkbox" checked disabled />
+            Klik hotspot lagi untuk menutup
+          </label>
+        </div>
+
+        <div class="inspector-section shortcuts">
+          <p class="eyebrow">SHORTCUT</p>
+          <div><kbd>E</kbd><span>Edit / Demo</span></div>
+          <div><kbd>D</kbd><span>Tampilkan hotspot debug</span></div>
+          <div><kbd>F</kbd><span>Fullscreen</span></div>
+          <div><kbd>Esc</kbd><span>Tutup popup</span></div>
+        </div>
+
+        <div class="inspector-section note">
+          <p><strong>Workflow Hari H:</strong> pilih gambar → tambah hotspot → pilih GIF/PNG → ubah ke Demo → test → Export HTML Final.</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div id="popup" class="popup" aria-hidden="true">
+    <button id="popupClose" class="popup-close" type="button" aria-label="Tutup popup">×</button>
+    <img id="popupImage" alt="Konten popup" />
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
