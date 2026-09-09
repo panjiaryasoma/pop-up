@@ -1,143 +1,75 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Comic Sequence Builder</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COBA</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="edit-mode">
-  <div class="app-shell">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">OFFLINE INTERACTIVE COMIC</p>
-        <h1>Panel Sequence Builder</h1>
-      </div>
-      <div class="top-actions">
-        <button id="modeBtn" class="btn" type="button">Mode: Edit</button>
-        <button id="fullscreenBtn" class="btn" type="button">Fullscreen</button>
-        <button id="exportBtn" class="btn btn-primary" type="button">Export HTML Final</button>
-      </div>
-    </header>
+<body>
 
-    <main class="workspace">
-      <section class="stage-panel">
-        <div class="stage-toolbar">
-          <label class="file-button btn btn-primary">
-            Tambah Panel
-            <input id="panelInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden />
-          </label>
-          <button id="addHotspotBtn" class="btn" type="button" disabled>Tambah Area Popup</button>
-          <button id="deleteHotspotBtn" class="btn btn-danger" type="button" disabled>Hapus Area</button>
-          <span id="statusText" class="status">Masukkan Fig 1, Fig 2, dst.</span>
-        </div>
+  <div class="gambar-panjang">
+    <img src="gambar-1.JPG" alt="Gambar 1" />
+    <img src="gambar-2.JPG" alt="Gambar 2" />
+    <img src="gambar-3.JPG" alt="Gambar 3" />
 
-        <div class="stage-viewport">
-          <div id="comicStage" class="comic-stage is-empty">
-            <div class="empty-state" id="emptyState">
-              <strong>Belum ada panel.</strong>
-              <span>Pilih beberapa gambar. Nama seperti fig-1, fig-2, fig-3 akan diurutkan otomatis.</span>
-            </div>
-            <img id="comicImage" class="comic-image" alt="Panel komik" draggable="false" />
-            <div id="hotspotLayer" class="hotspot-layer"></div>
-          </div>
-        </div>
+    <!--
+      Panel paling akhir tetap jadi bagian dari halaman panjang,
+      tapi dibungkus supaya kita bisa menaruh area interaktif relatif ke Gambar 4.
+    -->
+    <div class="panel-terakhir">
+      <img src="gambar-4.JPG" alt="Gambar 4" />
 
-        <div class="panel-strip-wrap">
-          <div id="panelStrip" class="panel-strip"></div>
-        </div>
-      </section>
+      <!--
+        AREA INTERAKTIF FINAL.
 
-      <aside class="inspector">
-        <section class="inspector-section">
-          <p class="eyebrow">PANEL</p>
-          <h2 id="panelTitle">Belum ada</h2>
-          <p id="panelHint" class="hint">Panel terakhir akan menjadi panel interaktif.</p>
-          <div class="panel-actions">
-            <button id="movePanelLeftBtn" class="btn compact-btn" type="button" disabled>← Geser</button>
-            <button id="movePanelRightBtn" class="btn compact-btn" type="button" disabled>Geser →</button>
-          </div>
-          <button id="deletePanelBtn" class="btn btn-danger wide" type="button" disabled>Hapus Panel Ini</button>
-        </section>
+        data-mode="overlay"  -> cuma area ini yang berubah.
+        data-mode="popup"    -> media muncul sebagai popup besar.
 
-        <section class="inspector-section">
-          <p class="eyebrow">AREA INTERAKTIF</p>
-          <h2 id="selectionTitle">Belum ada</h2>
-          <p class="hint">Area popup hanya dibuat di panel terakhir. Drag tepat di objek yang mau bisa diklik.</p>
-        </section>
+        Ganti data-media dengan PNG/GIF/WebP yang mau dipakai.
+      -->
+      <button
+        type="button"
+        class="area-final"
+        id="areaFinal"
+        data-mode="overlay"
+        data-media="final-area.gif"
+        aria-label="Area interaktif panel terakhir"
+      ></button>
 
-        <div id="hotspotControls" class="controls is-disabled" aria-disabled="true">
-          <label>
-            Nama area
-            <input id="labelInput" type="text" placeholder="Contoh: monitor / simbol" disabled />
-          </label>
+      <!-- Dipakai hanya saat data-mode="overlay" -->
+      <img
+        id="mediaFinalArea"
+        class="media-final-area"
+        src=""
+        alt="Konten interaktif panel terakhir"
+      />
+    </div>
 
-          <label>
-            Aksi saat diklik
-            <select id="actionSelect" disabled>
-              <option value="popup">Popup PNG / GIF</option>
-              <option value="overlay">Ganti hanya area yang di-drag</option>
-              <option value="password">Password → lalu popup</option>
-            </select>
-          </label>
-
-          <div id="passwordSettings" class="password-settings" hidden>
-            <label>
-              Pertanyaan / petunjuk
-              <input id="promptInput" type="text" placeholder="Apa kata yang kamu temukan?" disabled />
-            </label>
-            <label>
-              Password / jawaban
-              <input id="passwordInput" type="text" placeholder="Contoh: MERDEKA" disabled />
-            </label>
-            <p class="tiny-note">Ini puzzle lokal, bukan keamanan. Jawaban tersimpan di HTML final.</p>
-          </div>
-
-          <label class="file-button compact">
-            Pilih PNG / GIF / WebP
-            <input id="mediaInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled />
-          </label>
-          <div id="mediaName" class="media-name">Belum ada media.</div>
-
-          <label class="check-row">
-            <input id="toggleCloseInput" type="checkbox" checked disabled />
-            Klik lagi untuk menutup / mengembalikan
-          </label>
-        </div>
-
-        <section class="inspector-section shortcuts">
-          <p class="eyebrow">SHORTCUT</p>
-          <div><kbd>E</kbd><span>Edit / Demo</span></div>
-          <div><kbd>D</kbd><span>Tampilkan area klik</span></div>
-          <div><kbd>F</kbd><span>Fullscreen</span></div>
-          <div><kbd>←</kbd><span>Panel sebelumnya</span></div>
-          <div><kbd>→</kbd><span>Panel berikutnya</span></div>
-          <div><kbd>Esc</kbd><span>Tutup popup</span></div>
-        </section>
-      </aside>
-    </main>
+    <!-- Tombol popup lama dari template Stephen tetap dipertahankan -->
+    <button class="tombol-popup tombol-1" data-popup="popup-1.JPG">👆</button>
+    <button class="tombol-popup tombol-2" data-popup="popup-2.JPG">👆</button>
+    <button class="tombol-popup tombol-3" data-popup="popup-3.JPG">👆</button>
+    <button class="tombol-popup tombol-4" data-popup="popup-4.JPG">👆</button>
+    <button class="tombol-popup tombol-5" data-popup="popup-5.JPG">👆</button>
+    <button class="tombol-popup tombol-6" data-popup="popup-6.JPG">👆</button>
+    <button class="tombol-popup tombol-7" data-popup="popup-7.png">👆</button>
   </div>
 
-  <nav id="demoNav" class="demo-nav" aria-hidden="true">
-    <button id="prevPanelBtn" class="demo-nav-btn" type="button">← Kembali</button>
-    <span id="demoCounter" class="demo-counter">1 / 1</span>
-    <button id="nextPanelBtn" class="demo-nav-btn primary" type="button">Lanjut →</button>
-  </nav>
-
-  <div id="popup" class="popup" aria-hidden="true">
-    <button id="popupClose" class="popup-close" type="button" aria-label="Tutup popup">×</button>
-    <img id="popupImage" alt="Konten popup" />
+  <div class="pertanyaan">
+    <label for="jawaban">Apa kata yang anda temukan? (Kapital semua)</label>
+    <input type="text" id="jawaban" placeholder="Ketik jawaban di sini" autocomplete="off" />
+    <button type="button" id="cekJawaban">Jawab</button>
+    <p id="pesanJawaban"></p>
   </div>
 
-  <div id="passwordModal" class="password-modal" aria-hidden="true">
-    <form id="passwordForm" class="password-card">
-      <button id="passwordClose" class="popup-close inside" type="button" aria-label="Tutup password">×</button>
-      <p class="eyebrow">UNLOCK</p>
-      <h2 id="passwordPrompt">Masukkan password</h2>
-      <input id="passwordAnswer" type="text" autocomplete="off" placeholder="Ketik jawaban" />
-      <button class="btn btn-primary" type="submit">Jawab</button>
-      <p id="passwordMessage" class="password-message" aria-live="polite"></p>
-    </form>
+  <!-- Popup biasa, dipakai tombol lama dan bisa dipakai area final -->
+  <div class="popup" id="popup">
+    <img id="gambarPopup" src="" alt="Gambar pop-up" />
+  </div>
+
+  <div class="popup" id="popupJawaban">
+    <img src="popup-jawaban-benar.png" alt="Jawaban benar" />
   </div>
 
   <script src="script.js"></script>
