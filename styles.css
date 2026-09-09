@@ -1,0 +1,197 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #000;
+}
+
+.gambar-panjang {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.gambar-panjang > img,
+.panel-terakhir > img:first-child {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* =========================================================
+   PANEL TERAKHIR + AREA INTERAKTIF BARU
+   ========================================================= */
+
+.panel-terakhir {
+  position: relative;
+  width: 100%;
+}
+
+/*
+  INI YANG PALING SERING DIEDIT.
+  Posisi area final memakai persen terhadap Gambar 4,
+  jadi tidak perlu menghitung top dari seluruh halaman panjang.
+
+  left   = posisi dari kiri
+  top    = posisi dari atas
+  width  = lebar area
+  height = tinggi area
+*/
+.area-final,
+.media-final-area {
+  position: absolute;
+  left: 62%;
+  top: 55%;
+  width: 18%;
+  height: 14%;
+}
+
+.area-final {
+  z-index: 12;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.media-final-area {
+  z-index: 11;
+  display: none;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.media-final-area.muncul {
+  display: block;
+}
+
+/* Tekan D untuk melihat area transparan saat mengatur posisi. */
+body.debug-area .area-final {
+  outline: 3px dashed #00ff88;
+  background: rgba(0, 255, 136, 0.18);
+}
+
+/* =========================================================
+   TOMBOL POPUP LAMA
+   ========================================================= */
+
+.tombol-popup {
+  position: absolute;
+  z-index: 10;
+
+  width: 70px;
+  height: 70px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #ffdf35;
+  font-size: 32px;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+
+.tombol-1 {
+  top: 300px;
+  left: 20%;
+}
+
+.tombol-2 {
+  top: 600px;
+  left: 50%;
+}
+
+.tombol-3 {
+  top: 900px;
+  left: 80%;
+}
+
+.tombol-4 {
+  top: 1200px;
+  left: 30%;
+}
+
+.tombol-5 {
+  top: 1500px;
+  left: 70%;
+}
+
+.tombol-6 {
+  top: 1800px;
+  left: 25%;
+}
+
+.tombol-7 {
+  top: 2100px;
+  left: 75%;
+}
+
+/* =========================================================
+   PASSWORD / PERTANYAAN
+   ========================================================= */
+
+.pertanyaan {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+}
+
+.pertanyaan label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.pertanyaan input {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.pertanyaan button {
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffdf35;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#pesanJawaban {
+  min-height: 24px;
+  color: #ffdf35;
+}
+
+/* =========================================================
+   POPUP
+   ========================================================= */
+
+.popup {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.popup.muncul {
+  display: flex;
+}
+
+.popup img {
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  object-fit: contain;
+}
