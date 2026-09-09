@@ -1,39 +1,65 @@
-# Pop-up — Offline Interactive Comic Sequence Builder
+# pop-up
 
-Tool HTML + CSS + vanilla JavaScript untuk alur:
+Versi ini sengaja tetap mengikuti template Stephen yang sederhana: beberapa gambar ditumpuk vertikal dalam satu halaman, tombol lama tetap membuka popup, pertanyaan password tetap ada di bawah, dan **hanya panel terakhir** mendapat satu area interaktif tambahan.
 
-`Fig 1 → Fig 2 → Fig 3 → ... → panel terakhir interaktif`
+## Struktur
 
-Fokusnya sengaja sederhana untuk lomba offline: panel biasa hanya untuk navigasi, lalu **panel terakhir** bisa diberi area transparan yang memunculkan PNG/GIF, mengganti sebagian area, atau meminta password sebelum popup.
+```text
+gambar-1.JPG
+gambar-2.JPG
+gambar-3.JPG
+gambar-4.JPG        <- panel terakhir
+popup-1.JPG ...     <- popup lama
+final-area.gif      <- media baru untuk area panel terakhir
+popup-jawaban-benar.png
+index.html
+styles.css
+script.js
+```
 
-## Cara pakai
+## Area interaktif panel terakhir
 
-1. Buka `index.html`.
-2. Klik **Tambah Panel** dan pilih semua Fig. File diurutkan natural berdasarkan nama, jadi `fig-1.png`, `fig-2.png`, `fig-10.png` tetap masuk urutan benar.
-3. Jika urutan masih salah, pilih thumbnail lalu gunakan tombol **← Geser / Geser →**.
-4. Pilih thumbnail bertanda **FINAL**.
-5. Klik **Tambah Area Popup**, lalu drag objek/area yang ingin bisa diklik.
-6. Pilih aksi:
-   - **Popup PNG / GIF**
-   - **Ganti hanya area yang di-drag**
-   - **Password → lalu popup**
-7. Pilih PNG/GIF/WebP yang akan muncul.
-8. Klik **Mode: Demo**. Demo selalu mulai dari Fig 1.
-9. Gunakan **Kembali / Lanjut** atau tombol panah keyboard sampai panel terakhir, lalu klik area interaktif.
-10. Kembali ke Edit dan klik **Export HTML Final**.
+Di `index.html` ada:
 
-Hasil export adalah satu file `interactive-comic-final.html` yang berisi semua panel dan media sebagai Data URL, sehingga bisa dibuka langsung tanpa internet, server, npm, CDN, atau aplikasi tambahan.
+```html
+<button
+  class="area-final"
+  id="areaFinal"
+  data-mode="overlay"
+  data-media="final-area.gif"
+></button>
+```
 
-## Shortcut
+`data-mode="overlay"` berarti **cuma area pada Gambar 4 yang berubah** menjadi `final-area.gif`.
 
-- `E`: Edit / Demo
-- `D`: tampilkan area klik saat Demo
-- `F`: fullscreen
-- `← / →`: pindah panel saat Demo
-- `Esc`: tutup popup / password
+Kalau ingin media final muncul sebagai popup besar, ubah satu kata:
 
-## Catatan
+```html
+data-mode="popup"
+```
 
-- Interaksi sengaja hanya aktif di panel paling akhir supaya alurnya sesuai konsep lomba dan tidak membingungkan saat presentasi.
-- Password hanyalah mekanik puzzle lokal, bukan fitur keamanan.
-- GIF besar akan membuat file HTML final ikut besar.
+## Mengatur posisi area final
+
+Edit bagian ini di `styles.css`:
+
+```css
+.area-final,
+.media-final-area {
+  left: 62%;
+  top: 55%;
+  width: 18%;
+  height: 14%;
+}
+```
+
+Semua angka dihitung relatif terhadap **Gambar 4 saja**, bukan seluruh halaman panjang.
+
+Tekan `D` saat halaman terbuka untuk menampilkan kotak hijau debug. Tekan `D` lagi untuk menyembunyikannya.
+
+## Yang tidak berubah dari template awal
+
+- `gambar-1.JPG` sampai `gambar-4.JPG` masih ditumpuk vertikal.
+- `.tombol-1` sampai `.tombol-7` masih memakai posisi `top/left` lama.
+- Popup lama tetap bekerja.
+- Password `MERDEKA` tetap bekerja.
+- Semua berjalan offline dengan HTML + CSS + JavaScript biasa, tanpa dependency.
